@@ -1,20 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.99, maximum-scale=0.99">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110401578-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || []
-        function gtag(){dataLayer.push(arguments)}
-        gtag("js", new Date())
-        gtag("config", "UA-110401578-1")
-    </script>
-    <meta name="description" content="Dijkstra Visualization."/>
-    <meta property="author" content="Dave P U+1F913" />
+    <meta charset="UTF-8">
+    <title>Dijkstra Algorithm</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin-top: 50px;
+            background: url("390126_conquestus_sky-daytime.jpg");
+        }
+        p{
+            font-size: 20px;
+            font-family: "Times New Roman";
+        }
+        .content{
+            margin: 20px;
+        }
+        .left {
+            float: left;
+            border: #ff3f48 5px solid;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f7fada;
+            height: 500px;
+        }
+
+        .mid {
+            float: left;
+            text-align: center;
+            line-height: 100px;
+        }
+
+        .right {
+            float: left;
+            border: #ff3f48 5px solid;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f7fada;
+            height: 500px;
+        }
+    </style>
 </head>
 <body>
-<div id="app"></div>
-<script src="client.min.js"></script>
+<div class="content">
+    <div class="col-md-4 left">
+        <center><h2>Dialog</h2></center>
+        <p>
+            -Dialog mode sẽ cho người dùng nhập vào từng điểm và từng cạnh.
+            <br>-Bước 1: Thực hiện nhập liệu, thêm các điểm vào sơ đồ.
+            <br>-Bước 2: Thực hiện nhập liệu, thêm các cạnh vào sơ đồ.
+            <br>-Bước 3: Thực hiện nhập vào điểm đầu, và điểm cuối.
+            <br>-Kết quả trả là con đường ngắng nhất từ điểm đầu đến điểm cuối, trả về thông qua một Dialog.
+        </p>
+    </div>
+    <div class="col-md-4 mid">
+        <img src="LogoUTC.png" style=" padding-top: 10px" width="80%"/>
+        <center><h1>Dijkstra Algorithm</h1></center>
+        <a href="dialog/index.html" class="btn btn-secondary btn-lg btn-block">Dialog</a>
+        <a href="graph/index.html" class="btn btn-primary btn-lg btn-block">Graph</a>
+    </div>
+    <div class="col-md-4 right">
+        <center><h2>Graph</h2></center>
+        <p>
+            -Ngay khi vào giao diện, Graph sẽ cung cấp cho người xem một bản demo, bản demo sẽ cho ra quãng đường ngắn nhất từ một điểm đến các điểm còn lại (Điểm màu xanh).
+            <br>-Để tiếp tục ấn điểm có khoanh tròn màu xanh.
+            <br>-Nút "Thêm điểm/cạnh" để thực hiện lấy dữ liệu từ ô text làm điểm hoặc cạnh: ô text có chữ thì thêm điểm, số thì thêm cạnh.
+            <br>-Ấn nút "Kết quả" cho phép người dùng chọn 1 điểm là điểm gốc, từ đó trả lại quãng đường ngắn nhất từ điểm gốc đến các điểm còn lại.
+            <br>-Ấn nút "?" để có thể hiểu rõ hơn giao diện Graph!
+        </p>
+    </div>
+</div>
+
 </body>
 </html>

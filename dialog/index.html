@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <style>
+
+        body {
+            margin: 20px;
+            background: url("../390126_conquestus_sky-daytime.jpg");
+        }
+
+        .inputData {
+            float: left;
+            padding-right: 0px;
+        }
+
+        .showData {
+            float: left;
+            border: #ffbfe7 5px solid;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #faefe1;
+            height: 600px;
+            font-size: 25px;
+        }
+
+        .result {
+            float: left;
+        }
+
+        input[type=button] {
+            margin-top: 10px;
+        }
+
+        .inputDataTop {
+            border: #ff9d8d 5px solid;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #caf0fa;
+        }
+
+        .inputDataBody {
+            border: #ffac50 5px solid;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #c6faeb;
+        }
+
+        h3 {
+            font-family: "Times New Roman";
+        }
+
+        .dataNode {
+            margin-bottom: 160px;
+        }
+
+        #dsNode {
+            color: #0500ff;
+            font-family: "Arial";
+        }
+
+        #dsEdge {
+            color: #ff0017;
+            font-family: "Arial";
+        }
+
+        #result {
+            font-size: 30px;
+            color: #332f67;
+        }
+        #tinh{
+            border: #ff514c 5px solid;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f7fada;
+        }
+    </style>
+</head>
+<div class="col-md-4 inputData">
+    <div class="form-group inputDataTop">
+        <h2>Bước 1: Thêm điểm vào sơ đồ</h2>
+        <input type="text" placeholder="Nhập vào điểm ..." id="diem" class="form-control">
+        <input type="button" value="Thêm Điểm" onclick="themDiem()" class="btn btn-outline-success">
+    </div>
+    <div class="form-group inputDataBody">
+        <h2>Bước 2: Thêm các cạnh vào sơ đồ:</h2>
+        1. Điểm đầu
+        <input type="text" placeholder="Nhập vào điểm đầu của cạnh..." id="diemDau" class="form-control">
+        2. Điểm Cuối
+        <input type="text" placeholder="Nhập vào điểm Cuối của cạnh..." id="diemCuoi" class="form-control">
+        3. Độ dài cạnh
+        <input type="text" placeholder="Nhập vào độ dài cạnh ..." id="doDai" class="form-control">
+        <input type="button" value="Thêm Cạnh" onclick="themCanh()" class="btn btn-outline-success">
+    </div>
+
+</div>
+<div class="col-md-4 form-group result">
+    <div id="tinh">
+        <h2>Bước 3: Tính đường đi ngắn nhất</h2>
+        1. Điểm đầu<input type="text" placeholder="Nhập vào điểm đầu..." id="diemDauDuongDi" class="form-control">
+        2. Điểm cuối<input type="text" placeholder="Nhập vào điểm cuối..." id="diemCuoiDuongDi" class="form-control">
+        <input type="button" onclick="tinhDuongDi()" value="Tính" class="btn btn-outline-danger" data-toggle="modal"
+               data-target=".bs-example-modal-lg">
+    </div>
+    <img src="../LogoUTC.png" style="padding-left: 15%; padding-top: 10px" width="80%"/>
+</div>
+<div class="col-md-4 showData">
+    <div class="dataNode">
+        <h3>Danh sách điểm trong sơ đồ:</h3>
+        <p id="dsNode"></p>
+    </div>
+    <h3>Danh sách cạnh trong sơ đồ:</h3>
+    <p id="dsEdge"></p>
+</div>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">Kết quả</div>
+            <div class="modal-body" id="result">Easy Game</div>
+        </div>
+    </div>
+</div>
+<script>
+    class Graph {
+        constructor() {
+            this.nodes = [];
+            this.adjacencyList = {};
+        }
+
+        addNode(node) {
+            let check = 0;
+            this.nodes.forEach(nodes => {
+                if (nodes === node) {
+                    check++;
+                }
+            });
+            if (check === 0) {
+                this.nodes.push(node);
+                this.adjacencyList[node] = [];
+            } else {
+                alert(node + " đã có trong danh sách!");
+                return 0;
+            }
+        }
+
+        addEdge(node1, node2, weight) {
+            this.adjacencyList[node1].push({node: node2, weight: weight});
+            this.adjacencyList[node2].push({node: node1, weight: weight});
+        }
+
+        findPathWithDijkstra(startNode, endNode) {
+            let times = {};
+            let backtrace = {};
+            let pq = new PriorityQueue();
+            let checkStart = 0;
+            let checkEnd = 0;
+            times[startNode] = 0;
+
+            this.nodes.forEach(node => {
+                if (node === startNode) {
+                    checkStart++;
+                } else {
+                    times[node] = Infinity;
+                }
+            });
+            if (checkStart === 1) {
+                pq.enqueue([startNode, 0]);
+                while (!pq.isEmpty()) {
+                    let shortestStep = pq.dequeue();
+                    let currentNode = shortestStep[0];
+                    this.adjacencyList[currentNode].forEach(neighbor => {
+                        let time = times[currentNode] + neighbor.weight;
+                        if (time < times[neighbor.node]) {
+                            times[neighbor.node] = time;
+                            backtrace[neighbor.node] = currentNode;
+                            pq.enqueue([neighbor.node, time]);
+                        }
+                    });
+                }
+            } else {
+                alert(startNode + " không có trong danh sách điểm!");
+                return "";
+            }
+
+            let path = [endNode];
+
+            this.nodes.forEach(node => {
+                if (node === endNode) {
+                    checkEnd++;
+                } else {
+                    times[node] = Infinity;
+                }
+            });
+            if (checkEnd === 1) {
+                let lastStep = endNode;
+                while (lastStep !== startNode) {
+                    path.unshift(backtrace[lastStep]);
+                    lastStep = backtrace[lastStep]
+                }
+            } else {
+                alert(endNode + " không có trong danh sách điểm!");
+                return "";
+            }
+
+            return `Đường ngắn nhất: ${path} với tổng khoảng cách là: ${times[endNode]}`;
+        }
+    }
+
+    class PriorityQueue {
+        constructor() {
+            this.collection = [];
+        }
+
+        enqueue(element) {
+            if (this.isEmpty()) {
+                this.collection.push(element);
+            } else {
+                let added = false;
+                for (let i = 1; i <= this.collection.length; i++) {
+                    if (element[1] < this.collection[i - 1][1]) {
+                        this.collection.splice(i - 1, 0, element);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    this.collection.push(element);
+                }
+            }
+        };
+
+        dequeue() {
+            let value = this.collection.shift();
+            return value;
+        };
+
+        isEmpty() {
+            return (this.collection.length === 0)
+        };
+
+    }
+
+    let map = new Graph();
+    let dsNode = "";
+    let dsEdge = "";
+
+    function themDiem() {
+        if (map.addNode(document.getElementById("diem").value) !== 0) {
+            dsNode += document.getElementById("diem").value + ", ";
+            document.getElementById("dsNode").innerHTML = dsNode.substring(0, dsNode.length - 2) + ".";
+        }
+    }
+
+    function themCanh() {
+        try {
+            if (Number.isNaN(Number(document.getElementById("doDai").value))) {
+                alert("Độ dài cạnh phải là một số.");
+            } else {
+                map.addEdge(document.getElementById("diemDau").value, document.getElementById("diemCuoi").value, Number(document.getElementById("doDai").value));
+                dsEdge += document.getElementById("diemDau").value + document.getElementById("diemCuoi").value + " = " + Number(document.getElementById("doDai").value) + ", ";
+                document.getElementById("dsEdge").innerHTML = dsEdge.substring(0, dsEdge.length - 2) + ".";
+            }
+        } catch (e) {
+            alert("Bạn phải nhập vào những điểm đã thêm!");
+        }
+    }
+
+    function tinhDuongDi() {
+        console.log(document.getElementById("diemDauDuongDi").value);
+        document.getElementById("result").innerHTML = map.findPathWithDijkstra(document.getElementById("diemDauDuongDi").value, document.getElementById("diemCuoiDuongDi").value);
+    }
+</script>
+</body>
+</html>
